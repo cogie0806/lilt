@@ -2,253 +2,1053 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>超軽量化したcogie0806のホームページ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="cogie0806.png" type="image/png">
+    <title>少しだけ軽量化したcogie0806のホームページ</title>
+    
     <style>
-        /* 全体のレイアウト設定（CSS） */
         body {
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f0f2f5;
+            background-image: url("bg.jpg");
+            background-size: cover;            
+            background-position: center;      
+            background-attachment: fixed;     
+            background-color: #222;
+            color: #ffffff;            
+            font-family: sans-serif;    
             margin: 0;
             padding: 20px;
+            transition: background-image 0.5s ease;
+        }
+
+        body.dark-text #aisatsu,
+        body.dark-text #shoukai-text {
+            color: #000000 !important;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between; 
+            gap: 20px; 
+        }
+
+        .left-content {
+            flex: 1; 
+        }
+
+        .right-menu {
+            width: 300px; 
+            background: rgba(0, 0, 0, 0.5); 
+            padding: 20px;
+            border-radius: 12px; 
             box-sizing: border-box;
         }
 
-        /* 横並び・縦並びを自動で調整するコンテナ */
-        .content-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            width: 100%;
-            max-width: 950px;
+        .tokei-box {
+            background: rgba(0, 0, 0, 0.3); 
+            display: inline-block;    
+            padding: 10px 15px;            
+            border-radius: 8px;      
+            margin-bottom: 20px;
         }
 
-        /* 時計ボックスのデザイン */
-        .clock-box {
-            text-align: center;
-            background: white;
-            padding: 15px 40px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 300px;
+        #hizuke {
+            font-size: 16px;
+            margin: 0 0 5px 0;
+            color: #e0e0e0;
         }
-        .clock-title {
+
+        #tokei {
+            font-size: 28px;         
+            font-weight: bold;       
             margin: 0;
-            font-size: 0.9rem;
-            color: #666;
-            font-weight: bold;
-        }
-        .clock-time {
-            font-size: 2.8rem;
-            font-weight: bold;
-            color: #333;
-            margin-top: 5px;
         }
 
-        /* 鏡を中央に綺麗に配置するためのボックス */
-        .box {
-            text-align: center;
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 480px; /* 少し見やすく横幅を調整 */
-            box-sizing: border-box;
+        /* 🪞 鏡（カメラ）のデザイン */
+        .mirror-box {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            max-width: 400px;
+            margin-top: 10px;
         }
-        .box-title {
-            margin: 0 0 12px 0;
-            font-weight: bold;
-            font-size: 15px;
-            color: #333;
-        }
-
-        /* カメラ（鏡）の映像エリア */
         #mirror-video {
             width: 100%;
-            height: 260px;
-            border-radius: 10px;
-            background-color: #000;
-            margin-bottom: 12px;
-            object-fit: cover;
-            transform: scaleX(-1); /* 鏡のように左右反転 */
+            border-radius: 8px;
+            background: #222;
+            transform: scaleX(-1); 
+        }
+        .mirror-btn {
+            background-color: #a855f7; 
+            margin-top: 10px;
+        }
+        .mirror-btn:hover {
+            background-color: #9333ea;
+        }
+        .shutter-btn {
+            background-color: #ec4899; 
+            margin-top: 8px;
+        }
+        .shutter-btn:hover {
+            background-color: #db2777;
         }
         #download-canvas {
-            display: none; /* 写真撮影用の隠し要素 */
+            display: none;
         }
 
-        /* 鏡コントロール用ボタンの装飾 */
-        .mirror-btn-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 8px;
+        /* 🔮 おみくじのデザイン */
+        .omikuji-box {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            max-width: 400px;
+            margin-top: 15px;
+            text-align: center;
         }
-        .mirror-btn-container button {
+
+        /* 🎵 音楽プレイヤーのデザイン */
+        .player-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        .player-select, .bg-select {
+            background: #1f2937;
             color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+        }
+        .audio-credit {
+            font-size: 10px;
+            color: #ccc;
+            margin-top: 5px;
+            text-align: right;
+        }
+        .audio-credit a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        input, button, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
             border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3b82f6;
+            color: white;
             font-weight: bold;
             cursor: pointer;
-            font-size: 13px;
-            transition: transform 0.1s, opacity 0.2s;
-        }
-        .mirror-btn-container button:hover { opacity: 0.9; transform: scale(1.03); }
-        #btn-mirror-start { background-color: #3b82f6; }
-        #btn-mirror-stop { background-color: #ef4444; }
-        #btn-mirror-photo { background-color: #10b981; width: 80%; margin-top: 4px; }
-
-        /* 🔗 リンクメニュー全体のコンテナ */
-        .menu-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-            width: 100%;
-            max-width: 850px;
         }
 
-        /* リンクボタンの共通デザイン */
-        .menu-container a {
-            display: inline-flex;
-            align-items: center;
+        /* 💡 リンクボタンのデザイン */
+        .link-btn {
+            display: block;
+            text-align: center;
+            background-color: #10b981; 
             color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 13px;
+            text-decoration: none; 
+            padding: 8px;
+            margin: 8px 0;
+            border-radius: 4px;
             font-weight: bold;
-            transition: opacity 0.2s, transform 0.1s;
+            font-size: 14px;
         }
-        .menu-container a:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
+        .link-btn:hover {
+            background-color: #059669; 
+        }
+        .ai-btn {
+            background-color: #3b82f6;
+        }
+        .ai-btn:hover {
+            background-color: #2563eb;
         }
 
-        /* 各種ボタンの背景色設定 */
-        .btn-weather    { background-color: #2563eb; } /* cogie0806天気 */
-        .btn-apple      { background-color: #2563eb; } /* りんごキャッチ */
-        .btn-season     { background-color: #3b82f6; } /* 季節ページ */
-        .btn-news       { background-color: #3b82f6; } /* cogie0806ニュース */
-        .btn-wiki       { background-color: #3b82f6; } /* cogie0806マイクラwiki */
-        .btn-draw       { background-color: #3b82f6; } /* cogie0806ペイント */
-        .btn-typing     { background-color: #3b82f6; } /* cogie0806タイピング */
-        .btn-youtube    { background-color: #059669; } /* YouTube */
-        .btn-google     { background-color: #059669; } /* Google */
-        .btn-yweather   { background-color: #ef4444; } /* Y!天気 */
-        .btn-yahoo      { background-color: #ef4444; } /* Yahoo! */
-        .btn-scratch    { background-color: #f59e0b; width: 100%; max-width: 250px; justify-content: center; } /* Scratch */
+<!-- 📝 スケジュール・ToDoリストのデザイン -->
+<style>
+    .todo-box {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 15px;
+    }
+    #todo-input {
+        background: #1f2937;
+        color: white;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+    #todo-list {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 10px;
+        max-height: 150px;
+        overflow-y: auto;
+    }
+    #todo-list li {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 6px 10px;
+        margin-bottom: 5px;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+    }
+    #todo-list li button {
+        background-color: #ef4444;
+        width: auto;
+        padding: 2px 6px;
+        font-size: 12px;
+        margin-top: 0;
+    }
 
+        
+        /* ⏱ タイマー用のデザイン */
+        .timer-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        #timer-display {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .timer-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        .timer-buttons button {
+            margin-top: 5px;
+            flex: 1;
+        }
+        #start-btn { background-color: #10b981; }
+        #stop-btn { background-color: #ef4444; }
+
+        /* 🧮 電卓のデザイン */
+        .calc-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        #calc-screen {
+            width: 100%;
+            height: 45px;
+            background: #111827;
+            color: #10b981; 
+            text-align: right;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        .calc-buttons button {
+            margin-top: 0;
+            padding: 12px 5px;
+            font-size: 20px; 
+            border-radius: 6px;
+            background-color: #4b5563; 
+        }
+        .calc-buttons button:hover {
+            filter: brightness(1.2); 
+        }
+        .calc-buttons button.clear {
+            background-color: #ef4444; 
+            font-size: 16px;
+        }
+        .calc-buttons button.operator {
+            background-color: #f59e0b; 
+        }
+        .calc-buttons button.equal {
+            background-color: #3b82f6; 
+        }
+
+        /* 折りたたみ用スタイル */
+        .collapsible-content {
+            display: none;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .collapsible-content.show {
+            display: block;
+        }
+        .toggle-section-btn {
+            background-color: #6366f1;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+        .toggle-section-btn:hover {
+            background-color: #4f46e5;
+        }
+
+        /* 🚀 初期設定モーダル画面 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .modal-content {
+            background: #1f2937;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 450px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid #a855f7;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        .link-btn, button, select {
+            transition: all 0.3s ease;
+        }
+        .link-btn:hover, button:hover, select:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column; 
+            }
+            .right-menu {
+                width: 100%; 
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="content-container">
-        
-        <!-- ⏱ 時計エリア -->
-        <div class="clock-box">
-            <p class="clock-title">現在の時刻</p>
-            <div id="myClock" class="clock-time">00:00:00</div>
-        </div>
+    <!-- 🚀 初回アクセス用の初期設定画面（モーダル） -->
+    <div id="first-setup-modal" class="modal-overlay">
+        <div class="modal-content">
+            <p id="label-init-title" style="margin: 0 0 10px 0; font-size: 18px; font-weight: bold; text-align: center; color: #a855f7;">✨ はじめての初期設定</p>
+            <p style="font-size: 12px; color: #ccc; text-align: center; margin-bottom: 15px;">お好みの設定を選んでください。（後からいつでも変更できます）</p>
 
-        <!-- 🪞 メイン機能エリア（中央配置） -->
-        <!-- おみくじの枠と通信プログラムは完全に削除しました -->
-        <div class="box">
-            <p class="box-title">🪞 かんたん鏡（カメラ）</p>
-            <video id="mirror-video" autoplay playsinline></video>
-            <canvas id="download-canvas"></canvas> 
-            <div class="mirror-btn-container">
-                <button id="btn-mirror-start" onclick="startMirror()">鏡をうつす</button>
-                <button id="btn-mirror-stop" onclick="stopMirror()">⛔ 鏡を止める</button>
-                <button id="btn-mirror-photo" onclick="takePhoto()">📸 写真をダウンロード</button>
-            </div>
-        </div>
-
-        <!-- 🔗 リンクメニューエリア -->
-        <div class="menu-container">
-            <a href="https://github.io" class="btn-weather">⛅ cogie0806天気を開く</a>
-            <a href="https://github.io" class="btn-apple">🍎 りんごキャッチゲームで遊ぶ</a>
-            <a href="https://github.io" class="btn-season">季節ページを開く</a>
-            <a href="https://github.io" class="btn-news">📰 cogie0806ニュースを開く</a>
-            <a href="https://github.io" class="btn-wiki">cogie0806マイクラwikiを開く</a>
-            <a href="https://github.io" class="btn-draw">🎨 cogie0806ペイントエディタで絵を描く</a>
-            <a href="https://github.io" class="btn-typing">⌨ cogie0806タイピングをする</a>
+             <p id="label-init-bg" style="margin: 0 0 5px 0; font-size: 14px; font-weight: bold;">🎨 背景デザイン変更</p>
+            <select id="init-bg-selector" class="bg-select" onchange="syncFromInit('bg')">
+                <option value="bg.jpg">windows11背景</option>
+                <option value="2054115ca660bda6ce7e56dd701de7ca_t.jpeg">にじ背景</option>
+                <option value="MC.png">マイクラ背景</option>
+            </select>
             
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="btn-youtube">📺 YouTubeをひらく</a>
-            <a href="https://google.com" target="_blank" rel="noopener noreferrer" class="btn-google">🔍 Googleで調べる</a>
-            <a href="https://yahoo.co.jp" target="_blank" rel="noopener noreferrer" class="btn-yweather">⛅ Y!天気を開く</a>
-            <a href="https://yahoo.co.jp" target="_blank" rel="noopener noreferrer" class="btn-yahoo">🔴 Yahoo!を開く</a>
-            
-            <a href="https://mit.edu" target="_blank" rel="noopener noreferrer" class="btn-scratch">🟠 Scratchでプログラミングする</a>
-        </div>
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 12px 0;">
 
+            <p id="label-init-tz" style="margin: 0 0 5px 0; font-size: 14px; font-weight: bold;">🗺️ タイムゾーン（世界の時間）</p>
+            <select id="init-timezone-selector" style="background: #111827; color: white; font-size: 13px;" onchange="syncFromInit('tz')">
+                <option value="device" selected>📱 デバイスのローカル時刻</option>
+                <option value="auto">📍 位置情報で自動 (UTC+-)</option>
+                <option value="Asia/Tokyo">UTC+9 (日本 / 東京・韓国)</option>
+                <option value="America/New_York">UTC-5 (東部時間 / ニューヨーク)</option>
+                <option value="Europe/London">UTC+0 (イギリス / ロンドン)</option>
+            </select>
+
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 12px 0;">
+
+            <p id="label-init-name" style="margin: 0 0 5px 0; font-size: 14px; font-weight: bold;">👤 お名前の設定</p>
+            <input type="text" id="init-username-input" placeholder="例: ゲスト" style="background: #111827; color: white; font-size: 13px;" oninput="syncFromInit('name')">
+
+            <button id="btn-finish-init" onclick="finishSetup()" style="margin-top: 20px; background-color: #10b981; padding: 10px; font-size: 16px;">初期設定を終わる</button>
+        </div>
     </div>
 
-    <script>
-        // 1. 時計をリアルタイムで動かすプログラム
-        function updateClock() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('myClock').textContent = `${hours}:${minutes}:${seconds}`;
+    <div class="container">
+
+        <div class="left-content">
+            <h1 id="aisatsu">ゲストさん、こんにちは！</h1>
+            
+            <div class="tokei-box">
+                <p id="hizuke">0000年00月00日( )</p>
+                <p id="tokei">00:00:00</p>
+            </div>
+            
+            <div class="mirror-box">
+                <p id="label-mirror-title" style="margin: 0 0 8px 0; font-weight: bold;">🪞 かんたん鏡（カメラ）</p>
+                <video id="mirror-video" autoplay playsinline></video>
+                <canvas id="download-canvas"></canvas> 
+                <button id="btn-mirror-start" class="mirror-btn" onclick="startMirror()">鏡をうつす</button>
+                <button id="btn-mirror-stop" class="shutter-btn" onclick="stopMirror()" style="background-color:#ef4444;">⛔ 鏡を止める</button>
+                <button id="btn-mirror-photo" class="shutter-btn" onclick="takePhoto()">📸 写真をダウンロード</button>
+            </div>
+
+            <div id="setting-box" style="display: none; background: rgba(0, 0, 0, 0.5); padding: 15px; border-radius: 12px; border: 2px solid rgba(255, 255, 255, 0.3); max-width: 400px; margin-top: 15px;">
+                <p id="label-setting-title" style="margin: 0 0 10px 0; font-size: 16px; font-weight: bold; text-align: center; color: #a855f7;">🛠️ 設定メニュー</p>
+                
+                <p id="label-bg-title" style="margin: 0 0 5px 0; font-size: 14px; font-weight: bold;">🎨 背景デザイン変更</p>
+                <select id="bg-selector" class="bg-select" onchange="changeBackground()">
+                    <option value="bg.jpg">windows11背景</option>
+                    <option value="2054115ca660bda6ce7e56dd701de7ca_t.jpeg">にじ背景</option>
+                    <option value="MC.png">マイクラ背景</option>
+                </select>
+                <p id="label-bg-upload" style="margin: 8px 0 3px 0; font-size: 11px;">📥 じぶんの背景を追加する (.gif/.png/.jpg)</p>
+                <input type="file" id="bg-uploader" accept="image/gif, image/png, image/jpeg, image/jpg" style="font-size: 12px;" onchange="uploadBackground(event)">
+                
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 12px 0;">
+
+                <p id="label-tz-title" style="margin: 0 0 5px 0; font-size: 14px; font-weight: bold;">🗺️ タイムゾーン（世界の時間）</p>
+                <select id="timezone-selector" style="background: #1f2937; color: white; font-size: 13px;" onchange="tokeiWoUgokasul()">
+                    <option id="opt-tz-device" value="device" selected>📱 デバイスのローカル時刻</option>
+                    <option id="opt-tz-auto" value="auto">📍 位置情報で自動 (UTC+-)</option>
+                    <option value="Etc/GMT+12">UTC-12 (ベーカー島)</option>
+                    <option value="Pacific/Pago_Pago">UTC-11 (サモア・ニューエ)</option>
+                    <option value="Pacific/Honolulu">UTC-10 (ハワイ)</option>
+                    <option value="America/Anchorage">UTC-9 (アラスカ)</option>
+                    <option value="America/Los_Angeles">UTC-8 (太平洋時間 / ロサンゼルス)</option>
+                    <option value="America/Denver">UTC-7 (山岳部時間 / デンバー)</option>
+                    <option value="America/Chicago">UTC-6 (中部時間 / シカゴ)</option>
+                    <option value="America/New_York">UTC-5 (東部時間 / ニューヨーク)</option>
+                    <option value="America/Caracas">UTC-4 (カラカス・サンティアゴ)</option>
+                    <option value="America/Sao_Paulo">UTC-3 (ブラジル / サンパウロ)</option>
+                    <option value="America/Noronha">UTC-2 (フェルナンド・デ・ノローニャ)</option>
+                    <option value="Atlantic/Cape_Verde">UTC-1 (カーボベルデ)</option>
+                    <option value="Europe/London">UTC+0 (イギリス / ロンドン)</option>
+                    <option value="Europe/Paris">UTC+1 (フランス / パリ)</option>
+                    <option value="Africa/Cairo">UTC+2 (エジプト / カイロ)</option>
+                    <option value="Europe/Moscow">UTC+3 (ロシア / モスクワ)</option>
+                    <option value="Asia/Dubai">UTC+4 (アラブ首長国連邦 / ドバイ)</option>
+                    <option value="Asia/Karachi">UTC+5 (パキスタン / カラチ)</option>
+                    <option value="Asia/Dhaka">UTC+6 (バングラデシュ / ダッカ)</option>
+                    <option value="Asia/Bangkok">UTC+7 (タイ / バンコク)</option>
+                    <option value="Asia/Singapore">UTC+8 (シンガポール・中国・台湾)</option>
+                    <option value="Asia/Tokyo">UTC+9 (日本 / 東京・韓国)</option>
+                    <option value="Australia/Sydney">UTC+10 (オーストラリア / シドニー)</option>
+                    <option value="Pacific/Noumea">UTC+11 (ニューカレドニア)</option>
+                    <option value="Pacific/Auckland">UTC+12 (ニュージーランド)</option>
+                    <option value="Pacific/Fakaofo">UTC+13 (トケラウ諸島)</option>
+                    <option value="Pacific/Kiritimati">UTC+14 (キリバス / ライン諸島)</option>
+                </select>
+
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 12px 0;">
+
+                <p id="label-name-title" style="margin: 0 0 5px 0; font-size: 14px; font-weight: bold;">👤 お名前の設定</p>
+                <input type="text" id="username-input" placeholder="例: ゲスト" style="background: #1f2937; color: white; font-size: 13px;" oninput="updateUsername()">
+            </div>
+
+  
+            
+            <p id="shoukai-text" style="margin-top: 20px;">はじめてホームページを作りました！</p>
+        </div>
+
+        <div class="right-menu">
+            <h3 id="label-menu-title">メニュー</h3>
+            
+            <button id="btn-toggle-settings" onclick="toggleSettings()" style="background-color: #a855f7; margin-bottom: 10px; font-size: 15px;">⚙️ 設定をひらく / とじる</button>
+
+            <a class="link-btn ai-btn" href="https://cogie0806.github.io/weather/">⛅ cogie0806天気を開く</a>
+            <a class="link-btn ai-btn" href="https://cogie0806.github.io/Apple_Catch_Game/">🍎 りんごキャッチゲームで遊ぶ</a>
+            <a class="link-btn ai-btn" href="https://cogie0806.github.io/news/">📰 cogie0806ニュースを開く</a>
+            <a class="link-btn ai-btn" href="https://cogie0806.github.io/minecraft-wiki/">cogie0806マイクラwikiを開く</a>
+            <a class="link-btn ai-btn" href="https://cogie0806.github.io/Drawing/">🎨 cogie0806ペイントエディタで絵を描く</a>
+            <a class="link-btn ai-btn" href="https://cogie0806.github.io/typing/">⌨ cogie0806タイピングをする</a>
+            <a class="link-btn" href="https://youtube.com">📺 YouTubeをひらく</a>
+            <a class="link-btn" href="https://google.com">🔍 Googleで調べる</a>
+            <a class="link-btn" style="background-color: #ef4444;" href="https://weather.yahoo.co.jp">⛅ Y!天気を開く</a>
+            <a class="link-btn" style="background-color: #ef4444;" href="https://yahoo.co.jp">🔴 Yahoo!を開く</a>
+            <a class="link-btn" style="background-color: #ffab19;" href="https://scratch.mit.edu/users/cogie0806/">🟠 Scratchでプログラミングする</a>    
+
+              <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 12px 0;">
+        
+            <!-- ℹ️ このページについて（折りたたみ可能） -->
+            <button class="toggle-section-btn" onclick="toggleSection('about-section')">ℹ️ このページについてをひらく / とじる</button>
+            <div id="about-section" class="collapsible-content">
+                <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.3); padding: 12px; border-radius: 8px; margin-top: 5px;">
+                    <p><b id="about-title">このページについて</b></p>
+                    <p><b id="about-p1">1.僕について</b></p>
+                    <p id="about-p2">はじめまして。</p>
+                    <p>cogie0806です。</p>
+                    <p id="about-p3">よろしければ僕のフォローよろしくお願いいたします。</p>
+                    <a href="https://scratch.mit.edu/users/cogie0806/" target="_blank">・Scratch</a><br>
+                    <a href="https://minecraft-mcworld.com/author/a850cd4c8614f807c8bf03559472f5933a301cd2/" target="_blank">・クラフターズコロニー</a><br>
+                    <a href="https://www.roblox.com/ja/users/10697827229/profile" target="_blank">・Roblox</a>
+                    <p><b id="about-p4">2.このページの作者</b></p>
+                    <p id="about-p5">リクエスト・アップロード・簡単なバグ修正: cogie0806</p>
+                    <p id="about-p6">HTML作成: Google AI様</p>
+                    <p id="about-p7">このページの説明は以上です。</p>
+                    <p>cogie0806</p>
+                </div>
+            </div>
+
+
+            <!-- 🎵 音楽プレイヤー（折りたたみ可能） -->
+            <button class="toggle-section-btn" onclick="toggleSection('music-section')">🎵 音楽プレイヤーをひらく / とじる</button>
+            <div id="music-section" class="collapsible-content">
+                <div class="player-box" style="margin-top: 5px;">
+                    <select id="audio-selector" class="player-select" onchange="changeMusic()">
+                        <option id="opt-music-default" value="">-- 曲をえらんでね --</option>
+                        <option value="erize.mp3">エリーゼのために</option>
+                        <option value="Jingle_Bells-MB03-1(Reverb-Slow).mp3">ジングルベル(オルゴール)</option>
+                    </select>
+                    <audio id="bgm-player" controls style="width: 100%; margin-top: 8px; height: 32px;"></audio>
+                    
+                    <p id="label-music-upload" style="margin: 10px 0 3px 0; font-size: 12px; text-align: center;">📥 じぶんのmp3を追加して保存する</p>
+                    <input type="file" id="audio-uploader" accept="audio/mp3" style="font-size: 12px;" onchange="uploadMusic(event)">
+                    
+                    <div class="audio-credit">
+                        エリーゼのために提供：<a href="https://pocket-se.info" target="_blank" rel="noopener">ポケットサウンド</a><br>
+                        ジングルベル(オルゴール)提供：<a href="https://otologic.jp/" target="_blank" rel="noopener">OtoLogic</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ⏱ タイマー（折りたたみ可能） -->
+            <button class="toggle-section-btn" onclick="toggleSection('timer-section')">⏱ タイマーをひらく / とじる</button>
+            <div id="timer-section" class="collapsible-content">
+                <div class="timer-box" style="margin-top: 5px;">
+                    <p id="label-timer-title" style="margin: 0; font-size: 14px;">タイマー（秒数を入力）</p>
+                    <input type="number" id="timer-input" placeholder="例: 60" min="1">
+                    <div id="timer-display">00:00</div>
+                    <div class="timer-buttons">
+                        <button id="start-btn" onclick="startTimer()">スタート</button>
+                        <button id="stop-btn" onclick="stopTimer()">ストップ</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 📝 スケジュール・ToDoリストのHTML -->
+<button class="toggle-section-btn" onclick="toggleSection('todo-section')">📝 ToDoリストをひらく / とじる</button>
+<div id="todo-section" class="collapsible-content">
+    <div class="todo-box">
+        <p style="margin: 0 0 5px 0; font-size: 14px; font-weight: bold;">📝 やることリスト</p>
+        <input type="text" id="todo-input" placeholder="例: 宿題をする">
+        <button onclick="addTodo()" style="background-color: #10b981;">追加する</button>
+        <ul id="todo-list"></ul>
+    </div>
+</div>
+
+<a class="link-btn ai-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdPhwenRq9KiQ8N4PnseBWHR-OwWHDx0vucpUCflNeibR3VQw/viewform?embedded=true">フィードバックを送る</a>
+
+<!-- 📝 ToDoリストのJavaScript -->
+<script>
+    // ページを読み込んだときに保存されたリストを表示する
+    window.addEventListener('DOMContentLoaded', () => {
+        loadTodos();
+    });
+
+    function addTodo() {
+        const input = document.getElementById("todo-input");
+        const taskText = input.value.trim();
+        if (taskText === "") {
+            alert("やることを入力してね！");
+            return;
         }
-        updateClock();
-        setInterval(updateClock, 1000);
 
-        // 2. かんたん鏡（カメラ）の制御プログラム
-        let streamRef = null;
-        const video = document.getElementById('mirror-video');
+        let todos = JSON.parse(localStorage.getItem("cogie_todos")) || [];
+        todos.push(taskText);
+        localStorage.setItem("cogie_todos", JSON.stringify(todos));
 
+        input.value = "";
+        loadTodos();
+    }
+
+    function loadTodos() {
+        const list = document.getElementById("todo-list");
+        list.innerHTML = "";
+        let todos = JSON.parse(localStorage.getItem("cogie_todos")) || [];
+
+        todos.forEach((task, index) => {
+            const li = document.createElement("li");
+            li.textContent = task;
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "けす";
+            deleteBtn.onclick = () => {
+                deleteTodo(index);
+            };
+
+            li.appendChild(deleteBtn);
+            list.appendChild(li);
+        });
+    }
+
+    function deleteTodo(index) {
+        let todos = JSON.parse(localStorage.getItem("cogie_todos")) || [];
+        todos.splice(index, 1);
+        localStorage.setItem("cogie_todos", JSON.stringify(todos));
+        loadTodos();
+    }
+</script>
+
+            <!-- 🧮 電卓（折りたたみ可能） -->
+            <button class="toggle-section-btn" onclick="toggleSection('calc-section')">🧮 電卓をひらく / とじる</button>
+            <div id="calc-section" class="collapsible-content">
+                <div class="calc-box" style="margin-top: 5px;">
+                    <input type="text" id="calc-screen" readonly value="0">
+                    <div class="calc-buttons">
+                        <button id="btn-calc-clear" class="clear" onclick="clearCalc()">けす</button>
+                        <button class="operator" onclick="pressOperator('/')">÷</button>
+                        <button class="operator" onclick="pressOperator('*')">×</button>
+                        <button class="operator" onclick="pressOperator('-')">－</button>
+                        
+                        <button onclick="pressNum('7')">7</button>
+                        <button onclick="pressNum('8')">8</button>
+                        <button onclick="pressNum('9')">9</button>
+                        <button class="operator" onclick="pressOperator('+')">＋</button>
+                        
+                        <button onclick="pressNum('4')">4</button>
+                        <button onclick="pressNum('5')">5</button>
+                        <button onclick="pressNum('6')">6</button>
+                        <button class="equal" style="grid-column: 4; grid-row: 3 / span 2; height: 100%;" onclick="calculate()">＝</button>
+                        
+                        <button onclick="pressNum('1')">1</button>
+                        <button onclick="pressNum('2')">2</button>
+                        <button onclick="pressNum('3')">3</button>
+                        
+                        <button style="grid-column: span 2;" onclick="pressNum('0')">0</button>
+                        <button onclick="pressNum('.')">.</button>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.3); margin: 15px 0;">
+
+   
+    <script>
+        // 折りたたみ用関数
+        function toggleSection(id) {
+            const section = document.getElementById(id);
+            section.classList.toggle("show");
+        }
+
+        // 初期設定モーダルと通常設定の連動
+        function syncFromInit(type) {
+            if (type === 'bg') {
+                document.getElementById('bg-selector').value = document.getElementById('init-bg-selector').value;
+                changeBackground();
+            } else if (type === 'tz') {
+                document.getElementById('timezone-selector').value = document.getElementById('init-timezone-selector').value;
+                tokeiWoUgokasul();
+            } else if (type === 'name') {
+                document.getElementById('username-input').value = document.getElementById('init-username-input').value;
+                updateUsername();
+            }
+        }
+
+        function finishSetup() {
+            localStorage.setItem("cogie_first_time", "done");
+            document.getElementById("first-setup-modal").style.display = "none";
+        }
+
+        // 1. 時計と挨拶の更新
+        function tokeiWoUgokasul() {
+            const tzSelector = document.getElementById("timezone-selector");
+            let tz = tzSelector ? tzSelector.value : "device"; 
+
+            let year, month, date, h, m, s, dayNum;
+
+            if (tz === "device") {
+                const now = new Date();
+                year = now.getFullYear();
+                month = String(now.getMonth() + 1).padStart(2, '0');
+                date = String(now.getDate()).padStart(2, '0');
+                h = String(now.getHours()).padStart(2, '0');
+                m = String(now.getMinutes()).padStart(2, '0');
+                s = String(now.getSeconds()).padStart(2, '0');
+                dayNum = now.getDay();
+            } else {
+                if (tz === "auto") {
+                    tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                }
+                const options = { timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false };
+                const formatter = new Intl.DateTimeFormat('ja-JP', options);
+                const parts = formatter.formatToParts(new Date());
+
+                parts.forEach(p => {
+                    if (p.type === 'year') year = p.value;
+                    if (p.type === 'month') month = p.value.padStart(2, '0');
+                    if (p.type === 'day') date = p.value.padStart(2, '0');
+                    if (p.type === 'hour') h = p.value.padStart(2, '0');
+                    if (p.type === 'minute') m = p.value.padStart(2, '0');
+                    if (p.type === 'second') s = p.value.padStart(2, '0');
+                });
+                const targetDate = new Date(new Date().toLocaleString("en-US", {timeZone: tz}));
+                dayNum = targetDate.getDay();
+            }
+
+            const nameInput = document.getElementById("username-input");
+            const currentName = (nameInput && nameInput.value.trim() !== "") ? nameInput.value.trim() : "ゲスト";
+
+            const hoursNum = parseInt(h, 10);
+            const aisatsuTag = document.getElementById("aisatsu");
+            if (hoursNum >= 5 && hoursNum < 11) {
+                aisatsuTag.textContent = currentName + "さん、おはようございます！";
+            } else if (hoursNum >= 11 && hoursNum < 18) {
+                aisatsuTag.textContent = currentName + "さん、こんにちは！";
+            } else {
+                aisatsuTag.textContent = currentName + "さん、こんばんは！";
+            }
+
+            const yoobiJa = ["日", "月", "火", "水", "木", "金", "土"];
+            
+            document.getElementById("hizuke").textContent = year + "年" + month + "月" + date + "日（" + yoobiJa[dayNum] + "）";
+            document.getElementById("tokei").textContent = h + ":" + m + ":" + s;
+        }
+        setInterval(tokeiWoUgokasul, 1000);
+
+        function updateUsername() {
+            const nameInput = document.getElementById("username-input");
+            localStorage.setItem("cogie_username", nameInput.value);
+            tokeiWoUgokasul();
+        }
+
+        function toggleSettings() {
+            const settingBox = document.getElementById("setting-box");
+            if (settingBox.style.display === "none") {
+                settingBox.style.display = "block"; 
+            } else {
+                settingBox.style.display = "none";  
+            }
+        }
+
+        // 2. 画面読み込み時の初期化処理
+        window.addEventListener('DOMContentLoaded', () => {
+            const isFirstTime = localStorage.getItem("cogie_first_time");
+            if (!isFirstTime) {
+                document.getElementById("first-setup-modal").style.display = "flex";
+            }
+
+            initAudioDB();   
+            initBgDB();      
+            
+            const userAgent = navigator.userAgent.toLowerCase();
+            if (userAgent.includes("yjapp") || userAgent.includes("yahooandroid") || userAgent.includes("it.nikodroid.offline")) {
+                alert("警告:お使いのブラウザでは鏡(カメラ)が正しく機能しない可能性があります。Chromeなどの標準ブラウザで開いてみてください。");
+            }
+
+            const savedName = localStorage.getItem("cogie_username") || "";
+            document.getElementById("username-input").value = savedName;
+            document.getElementById("init-username-input").value = savedName;
+        });
+
+        // 4. 背景切り替え機能
+        let bgDb = null;
+        function initBgDB() {
+            const request = indexedDB.open("CogieBgDB", 1);
+            request.onupgradeneeded = (e) => {
+                bgDb = e.target.result;
+                bgDb.createObjectStore("backgrounds", { keyPath: "name" });
+            };
+            request.onsuccess = (e) => {
+                bgDb = e.target.result;
+                loadUploadedBgList();
+                const lastBg = localStorage.getItem("cogie_last_bg");
+                if (lastBg) {
+                    document.getElementById("bg-selector").value = lastBg;
+                    document.getElementById("init-bg-selector").value = lastBg;
+                    changeBackground();
+                }
+            };
+        }
+
+        function changeBackground() {
+            const bgSelector = document.getElementById("bg-selector");
+            const val = bgSelector.value;
+            if (!val) return;
+
+            localStorage.setItem("cogie_last_bg", val);
+
+            if (val === "music1.gif") {
+                document.body.classList.add("dark-text");
+            } else {
+                document.body.classList.remove("dark-text");
+            }
+
+            if (val.startsWith("custom_bg_")) {
+                const bgName = val.replace("custom_bg_", "");
+                const transaction = bgDb.transaction(["backgrounds"], "readonly");
+                const store = transaction.objectStore("backgrounds");
+                const getReq = store.get(bgName);
+                getReq.onsuccess = () => {
+                    if (getReq.result) {
+                        const blobURL = URL.createObjectURL(getReq.result.blob);
+                        document.body.style.backgroundImage = `url("${blobURL}")`;
+                    }
+                };
+            } else {
+                document.body.style.backgroundImage = `url("${val}")`;
+            }
+        }
+
+        function uploadBackground(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const transaction = bgDb.transaction(["backgrounds"], "readwrite");
+            const store = transaction.objectStore("backgrounds");
+            const bgData = { name: file.name, blob: file };
+            const addReq = store.put(bgData);
+            addReq.onsuccess = () => {
+                alert(`背景「${file.name}」をブラウザに保存しました！`);
+                loadUploadedBgList(file.name);
+                event.target.value = ""; 
+            };
+        }
+
+        function loadUploadedBgList(autoSelectName = null) {
+            const bgSelector = document.getElementById("bg-selector");
+            const transaction = bgDb.transaction(["backgrounds"], "readonly");
+            const store = transaction.objectStore("backgrounds");
+            const cursorReq = store.openCursor();
+            const options = Array.from(bgSelector.options);
+            options.forEach(opt => {
+                if (opt.value.startsWith("custom_bg_")) bgSelector.removeChild(opt);
+            });
+            cursorReq.onsuccess = (e) => {
+                const cursor = e.target.result;
+                if (cursor) {
+                    const option = document.createElement("option");
+                    option.value = "custom_bg_" + cursor.value.name;
+                    option.textContent = "⭐ マイ背景: " + cursor.value.name;
+                    bgSelector.appendChild(option);
+                    if (autoSelectName && cursor.value.name === autoSelectName) {
+                        bgSelector.value = option.value;
+                        changeBackground();
+                    }
+                    cursor.continue();
+                }
+            };
+        }
+
+        // 5. 音楽プレイヤー機能
+        let db = null;
+        const player = document.getElementById("bgm-player");
+        const selector = document.getElementById("audio-selector");
+
+        function initAudioDB() {
+            const request = indexedDB.open("CogieAudioDB", 1);
+            request.onupgradeneeded = (e) => {
+                db = e.target.result;
+                db.createObjectStore("songs", { keyPath: "name" });
+            };
+            request.onsuccess = (e) => {
+                db = e.target.result;
+                loadUploadedList();
+            };
+        }
+
+        function changeMusic() {
+            const selectedValue = selector.value;
+            if (!selectedValue) {
+                player.src = "";
+                return;
+            }
+            if (selectedValue.startsWith("custom_")) {
+                const songName = selectedValue.replace("custom_", "");
+                const transaction = db.transaction(["songs"], "readonly");
+                const store = transaction.objectStore("songs");
+                const getReq = store.get(songName);
+                getReq.onsuccess = () => {
+                    if (getReq.result) {
+                        const blobURL = URL.createObjectURL(getReq.result.blob);
+                        player.src = blobURL;
+                        player.play();
+                    }
+                };
+            } else {
+                player.src = selectedValue;
+                player.play();
+            }
+        }
+
+        function uploadMusic(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (file.type !== "audio/mp3" && !file.name.endsWith(".mp3")) {
+                alert("mp3形式のファイルを選択してください！");
+                return;
+            }
+            const transaction = db.transaction(["songs"], "readwrite");
+            const store = transaction.objectStore("songs");
+            const songData = { name: file.name, blob: file };
+            const addReq = store.put(songData);
+            addReq.onsuccess = () => {
+                alert(`「${file.name}」をブラウザに保存しました！`);
+                loadUploadedList();
+                event.target.value = ""; 
+            };
+        }
+
+        function loadUploadedList() {
+            const transaction = db.transaction(["songs"], "readonly");
+            const store = transaction.objectStore("songs");
+            const cursorReq = store.openCursor();
+            const options = Array.from(selector.options);
+            options.forEach(opt => {
+                if (opt.value.startsWith("custom_")) selector.removeChild(opt);
+            });
+            cursorReq.onsuccess = (e) => {
+                const cursor = e.target.result;
+                if (cursor) {
+                    const option = document.createElement("option");
+                    option.value = "custom_" + cursor.value.name;
+                    option.textContent = "⭐ マイソング: " + cursor.value.name;
+                    selector.appendChild(option);
+                    cursor.continue();
+                }
+            };
+        }
+
+        // 6. 鏡と写真ダウンロードの処理
         async function startMirror() {
             try {
-                if (streamRef) stopMirror();
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                video.srcObject = stream;
-                streamRef = stream;
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const videoTag = document.getElementById("mirror-video");
+                videoTag.srcObject = stream;
             } catch (err) {
-                alert("カメラの起動に失敗しました。カメラのアクセス権限を確認してください。");
-                console.error(err);
+                alert("カメラを開けませんでした。ロックを解除してね！");
             }
         }
 
         function stopMirror() {
-            if (streamRef) {
-                streamRef.getTracks().forEach(track => track.stop());
+            const video = document.getElementById("mirror-video");
+            if (video.srcObject) {
+                const tracks = video.srcObject.getTracks();
+                tracks.forEach(track => {
+                    track.stop();
+                });
                 video.srcObject = null;
-                streamRef = null;
+                alert("鏡を停止しました！");
+            } else {
+                alert("鏡は動いていません！");
             }
         }
 
         function takePhoto() {
-            if (!streamRef) {
-                alert("まず「鏡をうつす」ボタンを押してカメラを起動してください！");
+            const video = document.getElementById("mirror-video");
+            const canvas = document.getElementById("download-canvas");
+            if (!video.srcObject) {
+                alert("先に「鏡をうつす」ボタンを押してね！");
                 return;
             }
-            const canvas = document.getElementById('download-canvas');
-            const ctx = canvas.getContext('2d');
-            
+            const ctx = canvas.getContext("2d");
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-            
-            // 撮影画像も鏡と同じ向きになるように反転描画
             ctx.translate(canvas.width, 0);
             ctx.scale(-1, 1);
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            const link = document.createElement('a');
-            link.download = 'mirror-photo.png';
-            link.href = canvas.toDataURL('image/png');
+            const imageURL = canvas.toDataURL("image/jpeg");
+            const link = document.createElement("a");
+            link.href = imageURL;
+            link.download = "cogie-homepage-photo.jpg"; 
             link.click();
         }
-    </script>
 
+        // 7. タイマー用の処理
+        let timerCountdown;
+        let timeLeft = 0;
+        let timerAudio = new Audio("se (1).mp3");
+        timerAudio.loop = true;
+
+        function updateTimerDisplay() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            if (minutes < 10) minutes = "0" + minutes;
+            if (seconds < 10) seconds = "0" + seconds;
+            document.getElementById("timer-display").textContent = minutes + ":" + seconds;
+        }
+
+        function startTimer() {
+            clearInterval(timerCountdown);
+            timerAudio.pause();
+            timerAudio.currentTime = 0;
+            const inputVal = document.getElementById("timer-input").value;
+            if (timeLeft <= 0 || inputVal !== "") {
+                timeLeft = parseInt(inputVal, 10);
+                document.getElementById("timer-input").value = "";
+            }
+            if (isNaN(timeLeft) || timeLeft <= 0) {
+                alert("有効な秒数を入力してください！");
+                return;
+            }
+            updateTimerDisplay();
+            timerCountdown = setInterval(function() {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerCountdown);
+                    timerAudio.play(); 
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerCountdown);
+            timerAudio.pause();
+            timerAudio.currentTime = 0;
+        }
+
+        // 8. 電卓用の処理
+        const screen = document.getElementById("calc-screen");
+        let currentInput = "0"; 
+        let formula = "";        
+
+        function pressNum(val) {
+            if (currentInput === "0" && val !== ".") { currentInput = val; } else { currentInput += val; }
+            formula += val;
+            screen.value = currentInput;
+        }
+
+        function pressOperator(op) {
+            let displayOp = "";
+            if (op === "+") displayOp = " ＋ ";
+            if (op === "-") displayOp = " － ";
+            if (op === "*") displayOp = " × ";
+            if (op === "/") displayOp = " ÷ ";
+            if (formula === "") {
+                if (op === "-") { formula = "-"; screen.value = " － "; return; }
+                return;
+            }
+            const lastChar = formula.slice(-1);
+            if (["+", "-", "*", "/"].includes(lastChar)) { formula = formula.slice(0, -1) + op; } else { formula += op; }
+            currentInput = "0";
+            screen.value = displayOp;
+        }
+
+        function clearCalc() {
+            currentInput = "0";
+            formula = "";
+            screen.value = "0";
+        }
+
+        function calculate() {
+            try {
+                if (formula === "") return;
+                const result = new Function('return ' + formula)();
+                screen.value = Number(result.toFixed(4)); 
+                currentInput = screen.value;
+                formula = screen.value;
+            } catch (error) {
+                screen.value = "エラー";
+                formula = "";
+                currentInput = "0";
+            }
+        }
+    </script>
 </body>
 </html>
