@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>超軽量化したcogie0806のホームページ</title>
+    <style>
+        /* 全体のレイアウト設定（CSS） */
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 横並び・縦並びを自動で調整するコンテナ */
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 950px;
+        }
+
+        /* 時計ボックスのデザイン */
+        .clock-box {
+            text-align: center;
+            background: white;
+            padding: 15px 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 300px;
+        }
+        .clock-title {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: bold;
+        }
+        .clock-time {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+        }
+
+        /* 鏡を中央に綺麗に配置するためのボックス */
+        .box {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 480px; /* 少し見やすく横幅を調整 */
+            box-sizing: border-box;
+        }
+        .box-title {
+            margin: 0 0 12px 0;
+            font-weight: bold;
+            font-size: 15px;
+            color: #333;
+        }
+
+        /* カメラ（鏡）の映像エリア */
+        #mirror-video {
+            width: 100%;
+            height: 260px;
+            border-radius: 10px;
+            background-color: #000;
+            margin-bottom: 12px;
+            object-fit: cover;
+            transform: scaleX(-1); /* 鏡のように左右反転 */
+        }
+        #download-canvas {
+            display: none; /* 写真撮影用の隠し要素 */
+        }
+
+        /* 鏡コントロール用ボタンの装飾 */
+        .mirror-btn-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .mirror-btn-container button {
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 13px;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        .mirror-btn-container button:hover { opacity: 0.9; transform: scale(1.03); }
+        #btn-mirror-start { background-color: #3b82f6; }
+        #btn-mirror-stop { background-color: #ef4444; }
+        #btn-mirror-photo { background-color: #10b981; width: 80%; margin-top: 4px; }
+
+        /* 🔗 リンクメニュー全体のコンテナ */
+        .menu-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        /* リンクボタンの共通デザイン */
+        .menu-container a {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        .menu-container a:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* 各種ボタンの背景色設定 */
+        .btn-weather    { background-color: #2563eb; } /* cogie0806天気 */
+        .btn-apple      { background-color: #2563eb; } /* りんごキャッチ */
+        .btn-season     { background-color: #3b82f6; } /* 季節ページ */
+        .btn-news       { background-color: #3b82f6; } /* cogie0806ニュース */
+        .btn-wiki       { background-color: #3b82f6; } /* cogie0806マイクラwiki */
+        .btn-draw       { background-color: #3b82f6; } /* cogie0806ペイント */
+        .btn-typing     { background-color: #3b82f6; } /* cogie0806タイピング */
+        .btn-youtube    { background-color: #059669; } /* YouTube */
+        .btn-google     { background-color: #059669; } /* Google */
+        .btn-yweather   { background-color: #ef4444; } /* Y!天気 */
+        .btn-yahoo      { background-color: #ef4444; } /* Yahoo! */
+        .btn-scratch    { background-color: #f59e0b; width: 100%; max-width: 250px; justify-content: center; } /* Scratch */
+
+    </style>
+</head>
+<body>
+
+    <div class="content-container">
+        
+        <!-- ⏱ 時計エリア -->
+        <div class="clock-box">
+            <p class="clock-title">現在の時刻</p>
+            <div id="myClock" class="clock-time">00:00:00</div>
+        </div>
+
+        <!-- 🪞 メイン機能エリア（中央配置） -->
+        <!-- おみくじの枠と通信プログラムは完全に削除しました -->
+        <div class="box">
+            <p class="box-title">🪞 かんたん鏡（カメラ）</p>
+            <video id="mirror-video" autoplay playsinline></video>
+            <canvas id="download-canvas"></canvas> 
+            <div class="mirror-btn-container">
+                <button id="btn-mirror-start" onclick="startMirror()">鏡をうつす</button>
+                <button id="btn-mirror-stop" onclick="stopMirror()">⛔ 鏡を止める</button>
+                <button id="btn-mirror-photo" onclick="takePhoto()">📸 写真をダウンロード</button>
+            </div>
+        </div>
+
+        <!-- 🔗 リンクメニューエリア -->
+        <div class="menu-container">
+            <a href="https://github.io" class="btn-weather">⛅ cogie0806天気を開く</a>
+            <a href="https://github.io" class="btn-apple">🍎 りんごキャッチゲームで遊ぶ</a>
+            <a href="https://github.io" class="btn-season">季節ページを開く</a>
+            <a href="https://github.io" class="btn-news">📰 cogie0806ニュースを開く</a>
+            <a href="https://github.io" class="btn-wiki">cogie0806マイクラwikiを開く</a>
+            <a href="https://github.io" class="btn-draw">🎨 cogie0806ペイントエディタで絵を描く</a>
+            <a href="https://github.io" class="btn-typing">⌨ cogie0806タイピングをする</a>
+            
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="btn-youtube">📺 YouTubeをひらく</a>
+            <a href="https://google.com" target="_blank" rel="noopener noreferrer" class="btn-google">🔍 Googleで調べる</a>
+            <a href="https://yahoo.co.jp" target="_blank" rel="noopener noreferrer" class="btn-yweather">⛅ Y!天気を開く</a>
+            <a href="https://yahoo.co.jp" target="_blank" rel="noopener noreferrer" class="btn-yahoo">🔴 Yahoo!を開く</a>
+            
+            <a href="https://mit.edu" target="_blank" rel="noopener noreferrer" class="btn-scratch">🟠 Scratchでプログラミングする</a>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. 時計をリアルタイムで動かすプログラム
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('myClock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // 2. かんたん鏡（カメラ）の制御プログラム
+        let streamRef = null;
+        const video = document.getElementById('mirror-video');
+
+        async function startMirror() {
+            try {
+                if (streamRef) stopMirror();
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                video.srcObject = stream;
+                streamRef = stream;
+            } catch (err) {
+                alert("カメラの起動に失敗しました。カメラのアクセス権限を確認してください。");
+                console.error(err);
+            }
+        }
+
+        function stopMirror() {
+            if (streamRef) {
+                streamRef.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
+                streamRef = null;
+            }
+        }
+
+        function takePhoto() {
+            if (!streamRef) {
+                alert("まず「鏡をうつす」ボタンを押してカメラを起動してください！");
+                return;
+            }
+            const canvas = document.getElementById('download-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            // 撮影画像も鏡と同じ向きになるように反転描画
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            const link = document.createElement('a');
+            link.download = 'mirror-photo.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+
+</body>
+</html>
